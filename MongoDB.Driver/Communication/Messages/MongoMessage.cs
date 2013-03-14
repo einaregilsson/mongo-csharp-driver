@@ -14,11 +14,12 @@
 */
 
 using System.IO;
+using MongoDB.Bson;
 using MongoDB.Bson.IO;
 
 namespace MongoDB.Driver.Internal
 {
-    internal abstract class MongoMessage
+    internal abstract class MongoMessage : IMongoTraceable
     {
         // private fields
         private int _messageLength;
@@ -69,5 +70,7 @@ namespace MongoDB.Driver.Internal
             buffer.WriteInt32(0); // responseTo not used in requests sent by client
             buffer.WriteInt32((int)_opcode);
         }
+
+        abstract BsonDocument IMongoTraceable.GetTraceDocument();
     }
 }

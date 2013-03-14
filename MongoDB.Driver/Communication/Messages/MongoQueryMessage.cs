@@ -15,6 +15,7 @@
 
 using System;
 using System.Text;
+using MongoDB.Bson;
 using MongoDB.Bson.IO;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Options;
@@ -74,6 +75,33 @@ namespace MongoDB.Driver.Internal
                     BsonSerializer.Serialize(bsonWriter, _fields);
                 }
             }
+        }
+
+        BsonDocument IMongoTraceable.GetTraceDocument()
+        {
+            var doc = new BsonDocument();
+            doc.Add("$opCode", MessageOpcode.Query);
+
+            doc.Add("$collectionName", _collectionFullName);
+            
+            if (_numberToSkip > 0)
+            {
+                doc.Add("$numberToSkip", _numberToSkip);
+            }
+
+            if (_numberToReturn > 0)
+            {
+                doc.Add("$numberToReturn", _numberToReturn);
+            }
+
+            doc.Add("$query", _query.ToBsonDocument());
+            if (_fields != null)
+            {
+                doc.Add("$fields", _fields.ToBsonDocument());
+            }
+
+
+            return doc;
         }
     }
 }
