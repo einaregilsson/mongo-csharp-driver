@@ -81,6 +81,7 @@ namespace MongoDB.Driver.Internal
         {
             var doc = new BsonDocument();
             doc.Add("$opCode", MessageOpcode.Query);
+            doc.Add("$flags", _flags.ToString());
 
             doc.Add("$collectionName", _collectionFullName);
             
@@ -95,11 +96,11 @@ namespace MongoDB.Driver.Internal
             }
 
             doc.Add("$query", _query.ToBsonDocument());
+            
             if (_fields != null)
             {
                 doc.Add("$fields", _fields.ToBsonDocument());
             }
-
 
             return doc;
         }

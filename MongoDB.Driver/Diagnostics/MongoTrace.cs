@@ -8,6 +8,16 @@ using MongoDB.Bson;
 
 namespace MongoDB.Driver.Diagnostics
 {
+    [Flags]
+    public enum MongoTraceLevel
+    {
+        None = 0,
+        Queries = 0x1,
+        Commands = 0x2,
+        Inserts = 0x4,
+        Updates = 0x8,
+        Deletes = 0x10
+    }
     public static class MongoTrace
     {
         static readonly TraceSource _traceSource = new TraceSource("MongoDB.Driver");
