@@ -145,5 +145,14 @@ namespace MongoDB.Driver.Linq
             var expression = Expression.Call(null, method, args);
             return query.Provider.CreateQuery<TSource>(expression);
         }
+
+        internal static IMongoQuery CreateQueryFromExpression<T>(
+            MongoCollection<T> collection,
+            Expression<Func<T, bool>> queryExpression)
+        {
+            var queryable = collection.AsQueryable().Where(queryExpression);
+            var translatedQuery = MongoQueryTranslator.Translate(queryable);
+            return ((SelectQuery)translatedQuery).BuildQuery();
+        }
     }
 }
